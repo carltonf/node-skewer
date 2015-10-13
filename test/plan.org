@@ -1,0 +1,29 @@
+* Server
+** Start up normally
+- expect console.log
+- the port environment variable is respected
+
+** List directory
+Since the style is not important, try not to specify the implementation too
+much.
+
+- response status is 200
+- =document.getElementsByTagName('body')[0].textContent= should match some file
+  names.
+
+  I think this is good enough.
+** Logging
+*Not important: let's omit it for now*
+
+* Client-side skewer.js
+An area we need to expand greatly by modelling after Emacs [[https://github.com/skeeto/skewer-mode][skeeto/skewer-mode]].
+
+However, we're not aiming at perfect cross-browser compatibility or effect, so
+=jsdom= and =zombie= should be good enough for testing.
+
+** One-way command
+*** =ping=
+
+*** =log=
+
+*** =reload=
