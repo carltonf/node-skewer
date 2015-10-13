@@ -5,4 +5,10 @@ if(!process.argv[2]) {
   process.exit();
 }
 
-require('../index');
+var server = require('..')(process.argv[2]);
+
+server.listen(server.get('port'), function(){
+  var port = server.get('port');
+  console.log(`** node-skewer start at localhost:${port}`);
+  console.log(`** Load "localhost:${port}/${server.locals.skewerPath}/skewer.js" in page to enjoy complete features.`);
+});

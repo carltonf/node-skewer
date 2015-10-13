@@ -1,7 +1,10 @@
 
 var express = require('express'),
-    app = express(),
     path = require('path');
+
+function createServer(serveDir){
+
+var app = express();
 
 // * Env
 app.set('port', process.env.PORT || 3000);
@@ -15,9 +18,6 @@ app.use(logger('dev'));
 // * Routing
 // ** Directory listing
 //
-// TODO serveDir: a way to pass it from node-skewer executable?
-var serveDir = process.argv[2];
-
 app.use(express.static(serveDir));
 
 var serveIndex = require('serve-index');
@@ -71,9 +71,9 @@ app.get(`/${app.locals.skewerPath}/notify`, (req, res) => {
   }
 });
 
-// * Start server
-app.listen(app.get('port'), function(){
-  var port = app.get('port');
-  console.log(`** node-skewer start at localhost:${port}`);
-  console.log(`** Load "localhost:${port}/${app.locals.skewerPath}/skewer.js" in page to enjoy complete features.`)
-});
+
+return app;
+}// createServer ends
+
+// * Module build up
+module.exports = createServer;
