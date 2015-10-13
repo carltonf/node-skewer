@@ -63,5 +63,7 @@ app.get('/cdev/notify', (req, res) => {
 
 // * Start server
 app.listen(app.get('port'), function(){
-  console.log(`** node-skewer start at localhost:${app.get('port')}`);
+  var port = app.get('port');
+  console.log(`** node-skewer start at localhost:${port}`);
+  console.log(`** Load "localhost:${port}/cdev/skewer.js" in page to enjoy complete features.`)
 });
