@@ -1,0 +1,15 @@
+{
+  "name": "cdev",
+  "version": "0.1.0",
+  "description": "web server for web development",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "private": true,
+  "author": "Carl Xiong <xiongc05@gmail.com>",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.13.3"
+  }
+}
