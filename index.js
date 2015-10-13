@@ -1,8 +1,7 @@
 
-// * Boilerplate
 var express = require('express'),
     app = express(),
-    logger = require('morgan');
+    path = require('path');
 
 // * Env
 app.set('port', process.env.PORT || 3000);
@@ -10,20 +9,31 @@ app.set('port', process.env.PORT || 3000);
 // * Middleware
 // ** logger
 // Before all other routings
+var logger = require('morgan')
 app.use(logger('dev'));
 
 // * Routing
-// ** Static files
+// ** Directory listing
 //
-// TODO serveDir: a way to pass it from cdev executable?
+// TODO serveDir: a way to pass it from node-skewer executable?
 var serveDir = process.argv[2];
 
 app.use(express.static(serveDir));
-app.use('/cdev', express.static(__dirname + '/public'));
+
+var serveIndex = require('serve-index');
+app.use('/', serveIndex(serveDir, {icons:true, view: "details"}));
+
+// *** Special node-skewer files
+// From this routing:
+// 1. client-side skewer.js is served.
+// 2. various SSE/WebSocket is attached.
+app.locals.skewerPath = 'node-skewer'; // at root
+app.use(`/${app.locals.skewerPath}`, express.static(path.join(__dirname, 'public')));
+
 
 // * SSE: live reloading, repl and etc
 //
-app.get('/cdev/update-stream', (req, res) => {
+app.get(`/${app.locals.skewerPath}/update-stream`, (req, res) => {
   console.log('SSE: one client subscribe to the stream.')
 
   app.locals.sseResponse = res;
@@ -42,11 +52,11 @@ app.get('/cdev/update-stream', (req, res) => {
   });
 });
 
-// ** /cdev/notify?cmd='reload'
+// ** /${app.locals.skewerPath}/notify?cmd='reload'
 // *** Available cmds:
 //     - reload
 //     -
-app.get('/cdev/notify', (req, res) => {
+app.get(`/${app.locals.skewerPath}/notify`, (req, res) => {
   var msg = req.query.cmd,
       sseResponse = app.locals.sseResponse;
 
@@ -65,5 +75,5 @@ app.get('/cdev/notify', (req, res) => {
 app.listen(app.get('port'), function(){
   var port = app.get('port');
   console.log(`** node-skewer start at localhost:${port}`);
-  console.log(`** Load "localhost:${port}/cdev/skewer.js" in page to enjoy complete features.`)
+  console.log(`** Load "localhost:${port}/${app.locals.skewerPath}/skewer.js" in page to enjoy complete features.`)
 });
