@@ -10,7 +10,8 @@
   "author": "Carl Xiong <xiongc05@gmail.com>",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.13.3"
+    "express": "^4.13.3",
+    "morgan": "^1.6.1"
   },
   "bin": {
     "node-skewer": "./bin/skewer"

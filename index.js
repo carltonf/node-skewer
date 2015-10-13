@@ -1,17 +1,25 @@
 
 // * Boilerplate
 var express = require('express'),
-    app = express(); 
+    app = express(),
+    logger = require('morgan');
 
-// * Static files
+// * Env
+app.set('port', process.env.PORT || 3000);
+
+// * Middleware
+// ** logger
+// Before all other routings
+app.use(logger('dev'));
+
+// * Routing
+// ** Static files
 //
 // TODO serveDir: a way to pass it from cdev executable?
 var serveDir = process.argv[2];
 
 app.use(express.static(serveDir));
 app.use('/cdev', express.static(__dirname + '/public'));
-
-// * Routing
 
 // * SSE: live reloading, repl and etc
 //
@@ -37,7 +45,7 @@ app.get('/cdev/update-stream', (req, res) => {
 // ** /cdev/notify?cmd='reload'
 // *** Available cmds:
 //     - reload
-//     - 
+//     -
 app.get('/cdev/notify', (req, res) => {
   var msg = req.query.cmd,
       sseResponse = app.locals.sseResponse;
@@ -54,4 +62,6 @@ app.get('/cdev/notify', (req, res) => {
 });
 
 // * Start server
-app.listen(3000);
+app.listen(app.get('port'), function(){
+  console.log(`** node-skewer start at localhost:${app.get('port')}`);
+});
