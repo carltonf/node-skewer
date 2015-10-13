@@ -1,7 +1,7 @@
 {
-  "name": "cdev",
+  "name": "node-skewer",
   "version": "0.1.0",
-  "description": "web server for web development",
+  "description": "simple static server for web development, modeled after Emacs skewer",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -11,5 +11,8 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.13.3"
+  },
+  "bin": {
+    "node-skewer": "./bin/skewer"
   }
 }
