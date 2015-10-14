@@ -19,34 +19,55 @@ describe('Server basic', function(){
     })
   })
 
-  it('root / succeeds', function(done){
-    http.get(url, function(res){
-      assert.equal(200, res.statusCode);
+  describe('routing', function(){
+    it('GET / succeeds', function(done){
+      http.get(url, function(res){
+        assert.equal(200, res.statusCode);
 
-      done();
+        done();
+      });
+    });
+
+    it('GET /node-skewer/ is not found', function(done){
+      http.get(`${url}/node-skewer/`, function(res){
+        assert.equal(404, res.statusCode);
+
+        done();
+      });
+    });
+
+    it('GET /node-skewer/skewer.js can loaded', function(done){
+      http.get(`${url}/node-skewer/skewer.js`, function(res){
+        assert.equal(200, res.statusCode);
+
+        done();
+      });
     });
   });
 
-  var targetFile = "some.file";
-  it(`should list ${targetFile}`, function(done){
-    http.get(`${url}/somedir/`, function(res){
-      var buf = new Buffer(20480); //20K
+  describe('directory listing', function(){
+    var targetFile = "some.file";
 
-      res.setEncoding('utf8');
-      
-      res.on('data', function(chunk){
-        buf.write(chunk);
-      })
+    it(`should list ${targetFile}`, function(done){
+      http.get(`${url}/somedir/`, function(res){
+        var buf = new Buffer(20480); //20K
 
-      res.on('end', function(){
-        if (buf.toString().includes(targetFile)){
-          done();
-        }
-        else {
-          throw new Error(`"${targetFile}" is not found!`);
-        }
+        res.setEncoding('utf8');
+
+        res.on('data', function(chunk){
+          buf.write(chunk);
+        })
+
+        res.on('end', function(){
+          if (buf.toString().includes(targetFile)){
+            done();
+          }
+          else {
+            throw new Error(`"${targetFile}" is not found!`);
+          }
+        })
       })
-    })
+    });
   });
 
   after(function(){

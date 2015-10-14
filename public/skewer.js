@@ -1,4 +1,4 @@
-(new EventSource('/cdev/update-stream')).onmessage = function(e) {
+(new EventSource('/node-skewer/update-stream')).onmessage = function(e) {
   switch (e.data){
   case "log":
     console.log("A log message.");

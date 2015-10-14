@@ -8,11 +8,11 @@ function createServer(serveDir) {
 
   // * Env
   app.set('port', process.env.PORT || 3000);
-
+  var testingp = process.env.NODE_ENV !== "testing";
   // * Middleware
   // ** logger
   // Before all other routings
-  if (process.env.NODE_ENV !== "testing"){
+  if (testingp){
     var logger = require('morgan')
     app.use(logger('dev'));
   }

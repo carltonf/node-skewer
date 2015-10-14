@@ -13,6 +13,9 @@ much.
 ** Logging
 *Not important: let's omit it for now*
 
+** SSE will deliver message
+- the subscriber will get a line with data be "reload"/"log"
+
 * Client-side skewer.js
 An area we need to expand greatly by modelling after Emacs [[https://github.com/skeeto/skewer-mode][skeeto/skewer-mode]].
 
