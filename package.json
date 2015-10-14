@@ -4,7 +4,7 @@
   "description": "simple static server for web development, modeled after Emacs skewer",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha"
   },
   "private": true,
   "author": "Carl Xiong <xiongc05@gmail.com>",
@@ -16,5 +16,8 @@
   },
   "bin": {
     "node-skewer": "./bin/skewer"
+  },
+  "devDependencies": {
+    "mocha": "^2.3.3"
   }
 }

@@ -1,13 +1,11 @@
 * Server
-** Start up normally
-- expect console.log
-- the port environment variable is respected
+** Basic
+- response status is 200
 
 ** List directory
 Since the style is not important, try not to specify the implementation too
 much.
 
-- response status is 200
 - =document.getElementsByTagName('body')[0].textContent= should match some file
   names.
 
@@ -27,3 +25,10 @@ However, we're not aiming at perfect cross-browser compatibility or effect, so
 *** =log=
 
 *** =reload=
+
+* Bin
+Use shell =expect= to test CLI tool =skewer=.
+
+** Start up normally
+- expect some log to stdout
+- the port environment variable is respected
