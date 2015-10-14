@@ -70,6 +70,65 @@ describe('Server basic', function(){
     });
   });
 
+  describe('SSE', function(){
+    var sseResponse = null,
+        sseString = "";
+
+    before(function(done){
+      http.get(`${url}/node-skewer/update-stream`, function(res){
+        assert.equal(200, res.statusCode);
+        res.setEncoding('utf8');
+
+        res.on('data', function(chunk){
+          sseString += chunk;
+        });
+        sseResponse = res;
+
+        done();
+      });
+    });
+
+    it('"log" should be recieved', function(done){
+      function logVerifier(){
+        if(sseString.match(/data: ['"]log['"]/)){
+          sseString = "";
+          sseResponse.removeListener('data', logVerifier);
+
+          done();
+        }
+        // o/w let it time out to fail
+      };
+      sseResponse.on('data', logVerifier);
+
+      http.get(`${url}/node-skewer/notify?cmd="log"`, function(res){
+        assert.equal(200, res.statusCode);
+      });
+    });
+
+
+    it('"reload" should be recieved', function(done){
+      function reloadVerifier(){
+        if(sseString.match(/data: ['"]reload['"]/)){
+          sseString = "";
+          sseResponse.removeListener('data', reloadVerifier);
+
+          done();
+        }
+        // o/w let it time out to fail
+      };
+      sseResponse.on('data', reloadVerifier);
+
+      http.get(`${url}/node-skewer/notify?cmd="reload"`, function(res){
+        assert.equal(200, res.statusCode);
+      });
+    });
+
+    after(function(){
+      sseResponse.removeAllListeners('data');
+      sseResponse.emit('end');
+    });
+  });
+
   after(function(){
     server.close();
   })

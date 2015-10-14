@@ -8,11 +8,11 @@ function createServer(serveDir) {
 
   // * Env
   app.set('port', process.env.PORT || 3000);
-  var testingp = process.env.NODE_ENV !== "testing";
+  var testingp = (process.env.NODE_ENV == "testing");
   // * Middleware
   // ** logger
   // Before all other routings
-  if (testingp){
+  if (!testingp){
     var logger = require('morgan')
     app.use(logger('dev'));
   }
@@ -36,7 +36,9 @@ function createServer(serveDir) {
   // * SSE: live reloading, repl and etc
   //
   app.get(`/${app.locals.skewerPath}/update-stream`, (req, res) => {
-    console.log('SSE: one client subscribe to the stream.')
+    if(!testingp){
+      console.log('SSE: one client subscribe to the stream.');
+    }
 
     app.locals.sseResponse = res;
 
@@ -48,7 +50,9 @@ function createServer(serveDir) {
     res.write('\n');
 
     req.on('close', function(){
-      console.log('SSE: The client close the channel!');
+      if(!testingp){
+        console.log('SSE: The client close the channel!');
+      }
 
       delete app.locals.sseResponse;
     });
