@@ -36,11 +36,9 @@ function createServer(serveDir) {
   // * SSE: live reloading, repl and etc
   //
   app.get(`/${app.locals.skewerPath}/update-stream`, (req, res) => {
-    if(!testingp){
-      console.log('SSE: one client subscribe to the stream.');
-    }
-
     app.locals.sseResponse = res;
+
+    res.setTimeout(0);
 
     res.writeHead(200, {
       'Content-Type': 'text/event-stream',
@@ -50,10 +48,7 @@ function createServer(serveDir) {
     res.write('\n');
 
     req.on('close', function(){
-      if(!testingp){
-        console.log('SSE: The client close the channel!');
-      }
-
+      app.locals.sseResponse.end();
       delete app.locals.sseResponse;
     });
   });
