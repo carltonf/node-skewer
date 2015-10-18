@@ -90,7 +90,7 @@ describe('Server basic', function(){
 
     it('"log" should be recieved', function(done){
       function logVerifier(){
-        if(sseString.match(/data: ['"]log['"]/)){
+        if(sseString.match(/event: ['"]log['"]/)){
           sseString = "";
           sseResponse.removeListener('data', logVerifier);
 
@@ -108,7 +108,7 @@ describe('Server basic', function(){
 
     it('"reload" should be recieved', function(done){
       function reloadVerifier(){
-        if(sseString.match(/data: ['"]reload['"]/)){
+        if(sseString.match(/event: ['"]reload['"]/)){
           sseString = "";
           sseResponse.removeListener('data', reloadVerifier);
 
@@ -119,6 +119,24 @@ describe('Server basic', function(){
       sseResponse.on('data', reloadVerifier);
 
       http.get(`${url}/node-skewer/notify?cmd="reload"`, function(res){
+        assert.equal(200, res.statusCode);
+      });
+    });
+
+    it('"loadScript" should be recieved', function(done){
+      function loadScriptVerifier(){
+        if(sseString.match(/event: ['"]loadScript['"]/)
+           && sseString.match(/data: ['"]somefile.js['"]/)){
+          sseString = "";
+          sseResponse.removeListener('data', loadScriptVerifier);
+
+          done();
+        }
+        // o/w let it time out to fail
+      }
+      sseResponse.on('data', loadScriptVerifier);
+
+      http.get(`${url}/node-skewer/notify?cmd="loadScript"&data="somefile.js"`, function(res){
         assert.equal(200, res.statusCode);
       });
     });

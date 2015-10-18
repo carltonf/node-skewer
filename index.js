@@ -23,7 +23,7 @@ function createServer(serveDir) {
   app.use(express.static(serveDir));
 
   var serveIndex = require('serve-index');
-  app.use('/', serveIndex(serveDir, {icons:true, view: "details"}));
+  app.use('/', serveIndex(serveDir, {view: "details"}));
 
   // *** Special node-skewer files
   // From this routing:
@@ -57,15 +57,20 @@ function createServer(serveDir) {
   // *** Available cmds:
   //     - reload
   //     - log
+  //     - loadScript <pathname>
+  //       /${app.locals.skewerPath}/notify?cmd='loadScript'&data='somefile.js'
   app.get(`/${app.locals.skewerPath}/notify`, (req, res) => {
-    var msg = req.query.cmd,
+    var cmd = req.query.cmd,
+        data = req.query.data || "", // only data field is mandatory
         sseResponse = app.locals.sseResponse;
 
     if (sseResponse){
+      sseResponse.write(`event: ${cmd}\n`);
       sseResponse.write(`id: *MANUAL*\n`);
-      sseResponse.write(`data: ${msg}\n\n`);
+      sseResponse.write(`data: ${data}\n`);
+      sseResponse.write('\n');
 
-      res.send(`message sent: ${msg}\n\n`);
+      res.send(`message sent: ${cmd}\n\n`);
     }
     else{
       res.status(400).send('Error: Not subscribed yet!\n\n');
