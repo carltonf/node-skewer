@@ -59,6 +59,8 @@ function createServer(serveDir) {
   //     - log
   //     - loadScript <pathname>
   //       /${app.locals.skewerPath}/notify?cmd='loadScript'&data='somefile.js'
+  //     - open-url-in-new-tab <url>
+  //       /${app.locals.skewerPath}/notify?cmd='open-url-new-tab'&data='www.example.com'
   app.get(`/${app.locals.skewerPath}/notify`, (req, res) => {
     var cmd = req.query.cmd,
         data = req.query.data || "", // only data field is mandatory
